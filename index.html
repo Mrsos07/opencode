@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>دليل OpenCode وMCP — موقع تعليمي تفاعلي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e1a;
+      --panel: rgba(15, 23, 42, 0.85);
+      --panel-2: rgba(20, 30, 55, 0.95);
+      --card: rgba(255,255,255,0.04);
+      --card-hover: rgba(255,255,255,0.08);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --line: rgba(255,255,255,0.08);
+      --accent: #38bdf8;
+      --accent-2: #818cf8;
+      --accent-3: #c084fc;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --shadow-sm: 0 4px 6px rgba(0,0,0,.1);
+      --shadow-md: 0 10px 25px rgba(0,0,0,.2);
+      --shadow-lg: 0 25px 50px rgba(0,0,0,.3);
+      --shadow-glow: 0 0 40px rgba(56,189,248,.15);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --maxw: 1280px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+      font-size: 18px;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56,189,248,.15), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 0%, rgba(129,140,248,.12), transparent),
+        radial-gradient(ellipse 50% 30% at 0% 50%, rgba(192,132,252,.08), transparent),
+        linear-gradient(180deg, #050810 0%, #0a0e1a 50%, #060914 100%);
+      color: var(--text);
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    body::-webkit-scrollbar {
+      width: 10px;
+    }
+    body::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+    }
+    body::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      border-radius: 5px;
+    }
+    body::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, var(--accent-2), var(--accent-3));
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .progress {
+      position: fixed;
+      inset-inline: 0;
+      top: 0;
+      height: 4px;
+      background: rgba(255,255,255,.06);
+      z-index: 60;
+    }
+    .progress > span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+      box-shadow: 0 0 20px rgba(56,189,248,.5), 0 0 40px rgba(129,140,248,.3);
+      transition: width 0.1s ease-out;
+    }
+
+    .hero-wrap {
+      padding: 42px 20px 28px;
+    }
+    .hero {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 40px;
+      border: 1px solid rgba(56,189,248,.15);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, rgba(15,23,42,.95) 0%, rgba(10,17,34,.9) 100%);
+      box-shadow: var(--shadow-lg), var(--shadow-glow), inset 0 1px 0 rgba(255,255,255,.05);
+      overflow: hidden;
+      position: relative;
+      backdrop-filter: blur(20px);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      left: -120px;
+      top: -100px;
+      background: radial-gradient(circle, rgba(56,189,248,.12), transparent 70%);
+      pointer-events: none;
+      animation: float 8s ease-in-out infinite;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      right: -150px;
+      bottom: -150px;
+      background: radial-gradient(circle, rgba(129,140,248,.1), transparent 70%);
+      pointer-events: none;
+      animation: float 10s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(20px, -20px); }
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(56,189,248,.12), rgba(129,140,248,.08));
+      color: #e0f2fe;
+      border: 1px solid rgba(56,189,248,.25);
+      font-size: 15px;
+      margin-bottom: 16px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(56,189,248,.1);
+    }
+
+    h1, h2, h3, h4 { line-height: 1.4; margin: 0 0 16px; }
+    h1 { 
+      font-size: clamp(38px, 4.5vw, 62px); 
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 0%, #e0f2fe 50%, #ddd6fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    h2 { 
+      font-size: clamp(28px, 3.2vw, 42px);
+      color: #fff;
+    }
+    h3 { font-size: clamp(22px, 2.4vw, 30px); color: #f1f5f9; }
+    h4 { font-size: 20px; color: #e2e8f0; }
+
+    .hero p.lead {
+      max-width: 820px;
+      color: var(--muted);
+      font-size: 22px;
+      margin: 0 0 24px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .stat {
+      background: linear-gradient(135deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      transition: var(--transition);
+    }
+    .stat:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56,189,248,.3);
+      box-shadow: var(--shadow-md), 0 0 20px rgba(56,189,248,.1);
+    }
+    .stat strong {
+      display: block;
+      font-size: 26px;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+    .hero-visual {
+      display: grid;
+      gap: 12px;
+    }
+    .image-card {
+      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+    }
+    .image-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg), 0 0 30px rgba(56,189,248,.15);
+      border-color: rgba(56,189,248,.2);
+    }
+    .image-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #111827;
+    }
+    .image-card figcaption {
+      padding: 10px 14px 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .shell {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 20px 36px;
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 22px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-lg);
+    }
+    .sidebar h3 { font-size: 22px; margin-bottom: 10px; }
+    .sidebar p { color: var(--muted); font-size: 16px; margin-top: 0; }
+    .nav-links { display: grid; gap: 10px; margin-top: 16px; }
+    .nav-links a {
+      display: block;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      color: var(--text);
+      background: rgba(255,255,255,.03);
+      border: 1px solid transparent;
+      transition: var(--transition);
+      font-size: 16px;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+    .nav-links a:hover {
+      background: rgba(56,189,248,.08);
+      border-color: rgba(56,189,248,.2);
+      text-decoration: none;
+      transform: translateX(-4px);
+    }
+    .nav-links a.active {
+      background: linear-gradient(135deg, rgba(56,189,248,.15), rgba(129,140,248,.1));
+      border-color: rgba(56,189,248,.3);
+      text-decoration: none;
+      transform: translateX(-4px);
+      box-shadow: 0 4px 15px rgba(56,189,248,.15);
+    }
+    .checklist {
+      margin-top: 24px;
+      padding: 18px;
+      background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(16,185,129,.04));
+      border: 1px solid rgba(16,185,129,.2);
+      border-radius: var(--radius-lg);
+    }
+    .checklist ul { padding: 0 18px 0 0; margin: 10px 0 0; }
+    .checklist li { margin: 8px 0; color: #dffce8; }
+
+    main { display: grid; gap: 34px; }
+
+    .unit-block {
+      display: grid;
+      gap: 28px;
+      padding: 32px;
+      border: 1px solid rgba(56,189,248,.15);
+      border-radius: 32px;
+      background: linear-gradient(180deg, rgba(15,23,42,.8), rgba(10,17,34,.5));
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(10px);
+    }
+    .unit-header {
+      padding: 28px 32px;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(129,140,248,.25);
+      background: linear-gradient(135deg, rgba(56,189,248,.12), rgba(129,140,248,.1), rgba(192,132,252,.08));
+      box-shadow: var(--shadow-md);
+    }
+    .unit-header .unit-label {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      font-size: 15px;
+      color: #dffbff;
+    }
+    .unit-header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow-md);
+      scroll-margin-top: 32px;
+      transition: var(--transition);
+    }
+    .section:hover {
+      border-color: rgba(56,189,248,.15);
+    }
+    .section + .section { margin-top: 2px; }
+    .section p, .section li { color: var(--text); font-size: 19px; }
+    .section .muted { color: var(--muted); }
+    .kicker {
+      color: #b8f8ff;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      font-size: 14px;
+      margin-bottom: 12px;
+      display: inline-block;
+      font-weight: 700;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      transition: var(--transition);
+    }
+    .card:hover {
+      background: var(--card-hover);
+      transform: translateY(-4px);
+      border-color: rgba(56,189,248,.2);
+      box-shadow: var(--shadow-md);
+    }
+    .card h4 { margin-bottom: 10px; }
+    .card p { margin: 0; color: var(--muted); font-size: 18px; }
+
+    .pill-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 8px; }
+    .pill {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(129,140,248,.15), rgba(192,132,252,.1));
+      border: 1px solid rgba(129,140,248,.25);
+      color: #e0e7ff;
+      font-size: 15px;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(129,140,248,.15);
+    }
+
+    .tab-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .tab-buttons button {
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 16px;
+      font-family: inherit;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    .tab-buttons button:hover {
+      background: rgba(56,189,248,.1);
+      border-color: rgba(56,189,248,.25);
+    }
+    .tab-buttons button.active {
+      background: linear-gradient(135deg, rgba(56,189,248,.2), rgba(129,140,248,.15));
+      border-color: rgba(56,189,248,.35);
+      box-shadow: 0 4px 15px rgba(56,189,248,.2);
+    }
+    .tab-panel {
+      display: none;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      font-size: 18px;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .tab-panel.active { display: block; }
+
+    details {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin: 18px 0;
+      transition: var(--transition);
+    }
+    details:hover {
+      border-color: rgba(56,189,248,.2);
+    }
+    details[open] {
+      background: rgba(255,255,255,.05);
+      border-color: rgba(56,189,248,.15);
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: #fff;
+      outline: none;
+      font-size: 18px;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    summary::before {
+      content: '+';
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(56,189,248,.15);
+      color: var(--accent);
+      font-size: 18px;
+      font-weight: 800;
+      transition: var(--transition);
+    }
+    details[open] summary::before {
+      content: '−';
+      background: rgba(129,140,248,.15);
+      color: var(--accent-2);
+    }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .compare .side {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      transition: var(--transition);
+    }
+    .compare .side:hover {
+      transform: translateY(-4px);
+    }
+    .good { border-color: rgba(34,197,94,.25) !important; }
+    .warn { border-color: rgba(245,158,11,.25) !important; }
+
+    pre {
+      margin: 0;
+      overflow: auto;
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #0a1220 0%, #060d18 100%);
+      border: 1px solid rgba(56,189,248,.2);
+      color: #e0f2fe;
+      direction: ltr;
+      text-align: left;
+      font-size: 15px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,.3);
+    }
+    .code-wrap {
+      position: relative;
+      margin-top: 12px;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      border: 0;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: #0c1929;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      font-weight: 700;
+      font-family: inherit;
+      font-size: 14px;
+      transition: var(--transition);
+      box-shadow: 0 4px 12px rgba(56,189,248,.3);
+    }
+    .copy-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56,189,248,.4);
+    }
+
+    .step-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 16px;
+      align-items: start;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      transition: var(--transition);
+    }
+    .step:hover {
+      border-color: rgba(56,189,248,.2);
+      transform: translateX(-4px);
+    }
+    .step .num {
+      width: 54px;
+      height: 54px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+      color: #0c1929;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 22px;
+      box-shadow: 0 4px 15px rgba(56,189,248,.3);
+    }
+
+    .exam-box {
+      display: grid;
+      gap: 22px;
+      margin-top: 18px;
+    }
+    .exam-intro {
+      padding: 24px 28px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(56,189,248,.1), rgba(129,140,248,.08));
+      border: 1px solid rgba(56,189,248,.2);
+    }
+    .exam-intro strong { color: #ffffff; }
+    .candidate-form {
+      display: grid;
+      gap: 16px;
+      padding: 24px 28px;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .candidate-form label {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .candidate-form input {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(7,15,30,.9);
+      color: #fff;
+      font-size: 17px;
+      font-family: inherit;
+      transition: var(--transition);
+    }
+    .candidate-form input:focus {
+      outline: none;
+      border-color: rgba(56,189,248,.4);
+      box-shadow: 0 0 0 3px rgba(56,189,248,.1);
+    }
+    .exam-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 8px;
+    }
+    .exam-question {
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      transition: var(--transition);
+    }
+    .exam-question:hover {
+      border-color: rgba(56,189,248,.15);
+    }
+    .exam-question h4 { margin-bottom: 12px; }
+    .option {
+      display: block;
+      margin: 12px 0;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.02);
+      cursor: pointer;
+      font-size: 17px;
+      transition: var(--transition);
+    }
+    .option:hover { 
+      border-color: rgba(56,189,248,.3); 
+      background: rgba(56,189,248,.08);
+      transform: translateX(-4px);
+    }
+    .option input:checked + span {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .option input { margin-left: 8px; }
+    .exam-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .primary-btn {
+      border: 0;
+      border-radius: var(--radius-md);
+      padding: 16px 24px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 17px;
+      font-weight: 800;
+      color: #0c1929;
+      background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+      box-shadow: 0 8px 25px rgba(56,189,248,.3);
+      transition: var(--transition);
+    }
+    .primary-btn:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(56,189,248,.4);
+    }
+    .primary-btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .status-box {
+      display: none;
+      padding: 24px 28px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.04);
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .status-box.show { display: block; }
+    .status-box.success {
+      background: rgba(34,197,94,.08);
+      border-color: rgba(34,197,94,.22);
+    }
+    .status-box.warn {
+      background: rgba(245,158,11,.08);
+      border-color: rgba(245,158,11,.22);
+    }
+    .status-box.error {
+      background: rgba(239,68,68,.08);
+      border-color: rgba(239,68,68,.22);
+    }
+    .score-badge {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      font-weight: 800;
+    }
+    .hidden-results-page {
+      display: none;
+      min-height: 100vh;
+      padding: 42px 20px;
+    }
+    .hidden-results-page.active { display: block; }
+    .results-shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+    .results-head,
+    .results-card {
+      padding: 32px;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255,255,255,.1);
+      background: var(--panel);
+      box-shadow: var(--shadow-lg);
+    }
+    .results-table-wrap {
+      overflow: auto;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+    }
+    table.results-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: rgba(255,255,255,.03);
+    }
+    .results-table th,
+    .results-table td {
+      padding: 14px 16px;
+      text-align: right;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      font-size: 17px;
+    }
+    .results-table th {
+      background: rgba(110,231,255,.08);
+      color: #fff;
+    }
+    .mini-note {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .source-list {
+      display: grid;
+      gap: 12px;
+    }
+    .source-item {
+      padding: 18px 20px;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      transition: var(--transition);
+    }
+    .source-item:hover {
+      border-color: rgba(56,189,248,.2);
+      transform: translateX(-4px);
+    }
+    .source-item a {
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .source-item a:hover {
+      color: var(--accent-2);
+    }
+    .source-item strong { display: block; margin-bottom: 6px; }
+
+    footer {
+      max-width: var(--maxw);
+      margin: 40px auto 32px;
+      padding: 24px 20px;
+      color: var(--muted);
+      font-size: 16px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,.05);
+    }
+
+    @media (max-width: 1050px) {
+      .shell, .hero-grid, .compare, .cards { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .hero-stats { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      body { font-size: 17px; }
+      .hero, .section, .unit-block, .unit-header { padding: 20px; }
+      .step { grid-template-columns: 1fr; }
+      .step .num { width: 48px; height: 48px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><span id="scrollBar"></span></div>
+
+  <div class="hero-wrap">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">محتوى تدريبي عربي • OpenCode + MCP • من المصادر الرسمية</div>
+          <h1>دليل <a href="https://opencode.ai/" target="_blank" rel="noopener">OpenCode</a> التفاعلي</h1>
+          <p class="lead">
+            هذا الموقع التعليمي يشرح المفاهيم من الصفر: ما هو الذكاء الاصطناعي، وما هو <strong>LLM</strong>، وما هو وكيل الذكاء الاصطناعي، ثم ينتقل عمليًا إلى <strong>OpenCode</strong> و<strong>MCP</strong> و<strong>skills</strong> بخطوات واضحة وأمثلة جاهزة للتطبيق. تم بناء الشرح اعتمادًا على المصادر الرسمية الأساسية للمشروع والبروتوكول.
+          </p>
+          <div class="pill-row">
+            <span class="pill">شرح مبسط مباشر</span>
+            <span class="pill">أمثلة عملية</span>
+            <span class="pill">كود جاهز للنسخ</span>
+            <span class="pill">تصميم تقني رسمي</span>
+          </div>
+          <div class="hero-stats">
+            <div class="stat"><strong>3</strong><span>وحدات تعليمية واضحة</span></div>
+            <div class="stat"><strong>9</strong><span>دروس رئيسية داخل المحتوى</span></div>
+            <div class="stat"><strong>MCP + Skills</strong><span>ربط الأدوات وبناء مهارات قابلة لإعادة الاستخدام</span></div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <figure class="image-card">
+            <img src="https://opencode.ai/docs/_astro/screenshot.CQjBbRyJ_1dLadc.webp" alt="واجهة OpenCode الطرفية الرسمية" />
+            <figcaption>لقطة من واجهة OpenCode الرسمية.</figcaption>
+          </figure>
+          <figure class="image-card">
+            <img src="https://opencode.ai/_build/assets/opencode-desktop-icon-OSkS5hfD.png" alt="أيقونة OpenCode Desktop" style="max-height:190px; object-fit:contain; padding:20px;" />
+            <figcaption>OpenCode Desktop متاح بنسخة تجريبية لأنظمة macOS وWindows وLinux.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="shell">
+    <aside class="sidebar">
+      <h3>خريطة المحتوى</h3>
+      <p>اضغط على أي محور للتنقل السريع داخل الموقع.</p>
+      <nav class="nav-links" id="navLinks">
+        <a href="#intro-ai">الوحدة 1 • مقدمة الذكاء الاصطناعي</a>
+        <a href="#llm">الوحدة 1 • ما هو LLM</a>
+        <a href="#agents">الوحدة 1 • الوكيل مقابل النموذج</a>
+        <a href="#opencode-intro">الوحدة 2 • مدخل إلى OpenCode</a>
+        <a href="#desktop-install">الوحدة 2 • التثبيت على الديسكتوب</a>
+        <a href="#mcp">الوحدة 2 • ما هو MCP</a>
+        <a href="#connect-mcp">الوحدة 2 • ربط الوكيل مع MCP</a>
+        <a href="#mcpservers">الوحدة 2 • ما هو mcpservers.org</a>
+        <a href="#skills">الوحدة 2 • تثبيت المهارات</a>
+        <a href="#quiz">الوحدة 3 • اختبار سريع</a>
+        <a href="#sources">الوحدة 3 • المصادر</a>
+      </nav>
+      <div class="checklist">
+        <strong>بعد إنهاء هذا الدليل ستتمكن من:</strong>
+        <ul>
+          <li>تمييز الفرق بين النموذج والوكيل</li>
+          <li>تثبيت OpenCode وتشغيله</li>
+          <li>فهم MCP واستخدامه عمليًا</li>
+          <li>إضافة مهارات Skills للوكيل</li>
+        </ul>
+      </div>
+    </aside>
+
+    <main>
+      <div class="unit-block">
+        <div class="unit-header">
+          <span class="unit-label">الوحدة الأولى</span>
+          <h2>الأساسيات: الذكاء الاصطناعي والنماذج والوكلاء</h2>
+          <p>في هذه الوحدة ستبني الأساس المفاهيمي قبل الدخول إلى OpenCode، حتى يكون فهم MCP والمهارات والربط العملي أسهل وأوضح.</p>
+        </div>
+      <section id="intro-ai" class="section">
+        <span class="kicker">المحور الأول</span>
+        <h2>ما هو الذكاء الاصطناعي؟</h2>
+        <p>
+          الذكاء الاصطناعي هو مجال في علوم الحاسب يهدف إلى بناء أنظمة تستطيع تنفيذ مهام كانت تحتاج في السابق إلى ذكاء بشري، مثل التعلّم، والاستدلال، وفهم اللغة، وتحليل البيانات، وتقديم اقتراحات مفيدة. بصياغة أبسط: هو جعل الحاسوب لا ينفذ الأوامر فقط، بل يتعامل مع المعلومات بقدر من “الفهم العملي” لاتخاذ مخرجات أفضل.
+        </p>
+        <div class="cards">
+          <div class="card">
+            <h4>مثال بسيط</h4>
+            <p>فلتر البريد المزعج يتعلم من الرسائل السابقة ليقرر: هل هذه الرسالة مفيدة أم مزعجة؟</p>
+          </div>
+          <div class="card">
+            <h4>مثال عملي</h4>
+            <p>مساعد برمجي يقترح إصلاح خطأ في الكود بناءً على فهمه للمشروع والملفات.</p>
+          </div>
+          <div class="card">
+            <h4>فكرة مهمة</h4>
+            <p>الذكاء الاصطناعي مظلة كبيرة، وتحتها يأتي التعلم الآلي، والتعلم العميق، والنماذج اللغوية الكبيرة.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="llm" class="section">
+        <span class="kicker">المحور الثاني</span>
+        <h2>ما هو <a href="https://www.ibm.com/think/topics/large-language-models" target="_blank" rel="noopener">LLM</a>؟</h2>
+        <p>
+          الـ <strong>LLM</strong> أو <strong>Large Language Model</strong> هو نموذج متقدم من نماذج الذكاء الاصطناعي مُدرَّب على كميات هائلة من البيانات النصية، بحيث يتعلم أنماط اللغة ويستطيع فهم اللغة الطبيعية وتوليدها لأداء مهام متعددة مثل الشرح، والتلخيص، والكتابة، والبرمجة، والتحليل. وبصياغة مبسطة: هو “محرك تنبؤ لغوي ضخم” يتوقع التسلسل الأنسب للكلمات اعتمادًا على ما تعلمه من البيانات.
+        </p>
+        <div class="tab-buttons" data-tab-group="llm-tabs">
+          <button class="active" data-tab="llm-idea">الفكرة المبسطة</button>
+          <button data-tab="llm-examples">أمثلة</button>
+          <button data-tab="llm-limits">ما الذي لا يفعله وحده؟</button>
+        </div>
+        <div class="tab-panel active" id="llm-idea">
+          تخيل أن لديك متدربًا قرأ مليارات الجمل، ثم صار بارعًا في توقع الكلمة التالية وصياغة إجابات مفهومة. هذا هو قلب الـ LLM: بارع في اللغة، لكنه ليس بالضرورة نظام تنفيذ مستقل بذاته.
+        </div>
+        <div class="tab-panel" id="llm-examples">
+          أمثلة على النماذج اللغوية الكبيرة: <strong>GPT</strong> من OpenAI، و<strong>Claude</strong> من Anthropic، و<strong>Gemini</strong> من Google. الفكرة هنا ليست اسم النموذج فقط، بل كونه محرك الفهم والتوليد اللغوي داخل التطبيق أو الوكيل.
+        </div>
+        <div class="tab-panel" id="llm-limits">
+          الـ LLM وحده لا يعني تلقائيًا أنه سيقرأ ملفاتك، أو يشغّل أوامر، أو يتصل بخدمة خارجية. لكي يفعل هذا عمليًا يحتاج إلى أدوات، وصلاحيات، وسياق، وربما بروتوكول مثل MCP يفتح له الوصول المنظم إلى الأنظمة الخارجية.
+        </div>
+      </section>
+
+      <section id="agents" class="section">
+        <span class="kicker">المحور الثالث</span>
+        <h2>ما هو وكيل الذكاء الاصطناعي؟ وما الفرق بينه وبين النموذج؟</h2>
+        <p>
+          بحسب دليل OpenAI، الوكلاء هم تطبيقات تخطط، وتستدعي الأدوات، وتتعاون بين تخصصات مختلفة، وتحتفظ بقدر كافٍ من الحالة لإتمام أعمال متعددة الخطوات. كما تصف Google Cloud وكلاء الذكاء الاصطناعي بأنهم أنظمة برمجية تستخدم الذكاء الاصطناعي لتحقيق أهداف وإنجاز مهام نيابة عن المستخدم، مع قدر من الاستقلالية والتخطيط والذاكرة.
+        </p>
+        <div class="compare">
+          <div class="side warn">
+            <h3>النموذج Model</h3>
+            <ul>
+              <li>يفهم ويولد النص</li>
+              <li>يجيد الشرح والتحليل والاقتراح</li>
+              <li>لا ينفذ العمل الخارجي وحده غالبًا</li>
+              <li>يشبه “العقل اللغوي”</li>
+            </ul>
+          </div>
+          <div class="side good">
+            <h3>الوكيل Agent</h3>
+            <ul>
+              <li>يستخدم النموذج كمحرك تفكير</li>
+              <li>يخطط على عدة خطوات</li>
+              <li>يستدعي أدوات ويقرأ ملفات ويتخذ إجراءات</li>
+              <li>يشبه “العقل + اليد + الذاكرة + الأدوات”</li>
+            </ul>
+          </div>
+        </div>
+        <details>
+          <summary>مثال يوضح الفرق بسرعة</summary>
+          <p>
+            إذا قلت لنموذج لغوي: “اكتب لي خطة لإصلاح مشروع برمجي” فسوف يعطيك خطة ممتازة. لكن إذا قلت لوكيل برمجي: “افحص المشروع وحدد الخطأ ثم اقترح التعديل ونفذه بعد موافقتي” فهنا الوكيل يمكنه قراءة الملفات، واستخدام الأدوات، وربما تشغيل أوامر واستخدام MCP، ثم العودة بنتيجة عملية.
+          </p>
+        </details>
+      </section>
+
+      </div>
+
+      <div class="unit-block">
+        <div class="unit-header">
+          <span class="unit-label">الوحدة الثانية</span>
+          <h2>التطبيق العملي: OpenCode وMCP وSkills</h2>
+          <p>هذه الوحدة تركّز على الاستخدام الفعلي: ما هو OpenCode، كيف تثبّته، كيف تربطه بخوادم MCP، وكيف تضيف له مهارات قابلة لإعادة الاستخدام.</p>
+        </div>
+      <section id="opencode-intro" class="section">
+        <span class="kicker">المحور الرابع</span>
+        <h2>مدخل إلى <a href="https://opencode.ai/" target="_blank" rel="noopener">OpenCode</a></h2>
+        <p>
+          OpenCode يعرّف نفسه رسميًا بأنه <strong>وكيل برمجي مفتوح المصدر</strong>، ومتوفر على شكل واجهة طرفية Terminal، وتطبيق Desktop، وإضافة للـ IDE. هذه نقطة مهمة جدًا: OpenCode ليس مجرد نموذج لغوي، بل بيئة عمل لوكيل برمجي يمكنه فهم مشروعك، واستخدام الأدوات، والانتقال بين أوضاع مثل <strong>build</strong> و<strong>plan</strong>.
+        </p>
+        <div class="cards">
+          <div class="card">
+            <h4>Terminal</h4>
+            <p>تجربة قوية داخل الطرفية للمطورين الذين يحبون السرعة والتحكم.</p>
+          </div>
+          <div class="card">
+            <h4>Desktop</h4>
+            <p>واجهة رسومية رسمية بنسخة Beta لأنظمة متعددة.</p>
+          </div>
+          <div class="card">
+            <h4>IDE Extension</h4>
+            <p>إمكانية العمل بجانب VS Code وCursor وZed وغيرها.</p>
+          </div>
+        </div>
+        <details>
+          <summary>ماذا يفعل OpenCode داخل المشروع؟</summary>
+          <p>
+            بعد الانتقال إلى مجلد المشروع وتشغيل OpenCode، يمكنك تنفيذ <code>/init</code> ليحلل المشروع وينشئ ملف <code>AGENTS.md</code> في الجذر ليساعده على فهم البنية وأنماط العمل داخل الكود. كجزء من الإعداد العملي داخل المشروع.
+          </p>
+        </details>
+      </section>
+
+      <section id="desktop-install" class="section">
+        <span class="kicker">المحور الخامس</span>
+        <h2>تثبيت OpenCode على الديسكتوب</h2>
+        <p>
+          صفحة التحميل الرسمية توضّح أن <strong>OpenCode Desktop (Beta)</strong> متاح لأنظمة <strong>macOS</strong> و<strong>Windows</strong> و<strong>Linux</strong>. كما يذكر المستودع الرسمي أن التطبيق يمكن تنزيله مباشرة من صفحة التحميل أو من صفحة الإصدارات على GitHub.
+        </p>
+        <div class="tab-buttons" data-tab-group="install-tabs">
+          <button class="active" data-tab="install-desktop">تثبيت Desktop</button>
+          <button data-tab="install-cli">تثبيت CLI</button>
+          <button data-tab="install-first-run">أول تشغيل</button>
+        </div>
+        <div class="tab-panel active" id="install-desktop">
+          <div class="step-list">
+            <div class="step">
+              <div class="num">1</div>
+              <div>
+                <strong>افتح صفحة التحميل الرسمية</strong>
+                <p class="muted">الرابط الرسمي: <a href="https://opencode.ai/download" target="_blank" rel="noopener">opencode.ai/download</a></p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div>
+                <strong>اختر نسخة النظام</strong>
+                <p class="muted">المتوفر رسميًا: macOS (Apple Silicon / Intel)، Windows x64، Linux بصيغتي .deb و .rpm.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div>
+                <strong>بديل سريع على macOS</strong>
+                <p class="muted">يوضح المستودع الرسمي إمكانية التثبيت عبر Homebrew باستخدام cask الخاص بالنسخة المكتبية.</p>
+                <div class="code-wrap">
+                  <button class="copy-btn" data-copy="#codeDesktopBrew">نسخ</button>
+                  <pre id="codeDesktopBrew">brew install --cask opencode-desktop</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" id="install-cli">
+          <p>حتى لو كنت ستستخدم Desktop، من المفيد أن تعرف طرق تثبيت OpenCode الأساسية أيضًا، لأن كثيرًا من الاستخدامات العملية تبدأ من سطر الأوامر.</p>
+          <div class="code-wrap">
+            <button class="copy-btn" data-copy="#codeInstallCLI">نسخ</button>
+            <pre id="codeInstallCLI"># أسهل طريقة
+curl -fsSL https://opencode.ai/install | bash
+
+# npm
+npm install -g opencode-ai
+
+# macOS / Linux عبر Homebrew
+brew install anomalyco/tap/opencode
+
+# Windows
+choco install opencode
+scoop install opencode</pre>
+          </div>
+          <p class="muted">هذه الأوامر مذكورة في المقدمة الرسمية والمستودع الرسمي.</p>
+        </div>
+        <div class="tab-panel" id="install-first-run">
+          <div class="code-wrap">
+            <button class="copy-btn" data-copy="#codeFirstRun">نسخ</button>
+            <pre id="codeFirstRun">cd /path/to/project
+opencode
+/init</pre>
+          </div>
+          <p>
+            بعد الإعداد، الخطوة العملية المعتادة هي الدخول إلى مجلد المشروع، ثم تشغيل OpenCode، ثم تنفيذ <code>/init</code> ليحلل المشروع وينشئ ملف <code>AGENTS.md</code>.
+          </p>
+        </div>
+      </section>
+
+      <section id="mcp" class="section">
+        <span class="kicker">المحور السادس</span>
+        <h2>ما هو <a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="noopener">MCP</a>؟</h2>
+        <p>
+          MCP اختصار لـ <strong>Model Context Protocol</strong>، وهو معيار مفتوح المصدر لربط تطبيقات الذكاء الاصطناعي بالأنظمة الخارجية مثل الملفات المحلية، وقواعد البيانات، ومحركات البحث، والواجهات البرمجية، وسير العمل الجاهز. ويمكن فهمه ببساطة على أنه منفذ موحّد يربط تطبيقات الذكاء الاصطناعي بالأدوات والأنظمة الخارجية بدل بناء تكامل منفصل لكل أداة.
+        </p>
+        <div class="cards">
+          <div class="card">
+            <h4>لماذا هو مهم؟</h4>
+            <p>لأنه يقلل التعقيد ويجعل بناء التكامل مع الأدوات الخارجية أكثر توحيدًا للمطور والوكيل والمستخدم النهائي.</p>
+          </div>
+          <div class="card">
+            <h4>كيف يفيد الوكيل؟</h4>
+            <p>يعطيه وصولًا منظمًا إلى أدوات وبيانات حقيقية بدل الاعتماد على النص فقط.</p>
+          </div>
+          <div class="card">
+            <h4>كيف تفهمه بسرعة؟</h4>
+            <p>النموذج يفكر، والوكيل يقرر، وMCP يفتح له الباب للوصول إلى الأنظمة الخارجية.</p>
+          </div>
+        </div>
+        <details>
+          <summary>ما هو MCP Server؟</summary>
+          <p>
+            خادم MCP هو برنامج يقدّم قدرات محددة لتطبيقات الذكاء الاصطناعي عبر واجهة معيارية، ويمكن أن يوفّر <strong>Tools</strong> و<strong>Resources</strong> و<strong>Prompts</strong>.
+          </p>
+          <ul>
+            <li><strong>Tools:</strong> وظائف يناديها النموذج مباشرة لتنفيذ أفعال مثل استدعاء API أو تعديل ملفات.</li>
+            <li><strong>Resources:</strong> مصادر بيانات للقراءة فقط مثل ملفات أو وثائق أو مخططات قاعدة البيانات.</li>
+            <li><strong>Prompts:</strong> قوالب جاهزة تنظّم طريقة استخدام الأدوات والموارد في مهام متكررة.</li>
+          </ul>
+        </details>
+      </section>
+
+      <section id="connect-mcp" class="section">
+        <span class="kicker">المحور السابع</span>
+        <h2>طريقة ربط الوكيل في MCP داخل OpenCode</h2>
+        <p>
+          يمكنك إضافة أدوات خارجية إلى OpenCode باستخدام MCP، سواء كانت خوادم محلية أو بعيدة، وبعد إضافتها تصبح هذه الأدوات متاحة للوكيل مع بقية الأدوات المدمجة.
+        </p>
+        <div class="step-list">
+          <div class="step">
+            <div class="num">1</div>
+            <div>
+              <strong>افتح ملف إعداد OpenCode</strong>
+              <p class="muted">يتم تعريف خوادم MCP داخل إعداد OpenCode تحت المفتاح <code>mcp</code>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="num">2</div>
+            <div>
+              <strong>أضف خادم MCP باسم فريد</strong>
+              <p class="muted">كل خادم يحتاج اسمًا مميزًا، مع نوعه local أو remote، ثم الأمر أو الرابط المناسب.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="num">3</div>
+            <div>
+              <strong>اطلب من الوكيل استخدامه بالاسم</strong>
+              <p class="muted">يمكن الإشارة إلى خادم MCP باسمه مباشرة داخل البرومبت، مثل: “use the mcp_everything tool”.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-wrap">
+          <button class="copy-btn" data-copy="#codeMcp">نسخ</button>
+          <pre id="codeMcp">{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "mcp_everything": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-everything"]
+    }
+  }
+}</pre>
+        </div>
+        <p class="muted">هذا المثال يوضح الشكل العملي المتوقع لإعداد خادم MCP داخل OpenCode.</p>
+
+        <details>
+          <summary>مثال برومبت عملي بعد الربط</summary>
+          <p>
+            مثال تعليمي مبسط: <br />
+            <strong>“افحص المهمة الحالية، وإذا احتجت أدوات إضافية فاستخدم mcp_everything tool ثم لخّص لي النتائج بالعربي.”</strong><br />
+            الفكرة هنا ليست النص نفسه حرفيًا، بل أن الوكيل يستطيع الإشارة إلى أداة MCP التي عرّفتها بالاسم داخل الإعداد.
+          </p>
+        </details>
+
+        <details>
+          <summary>مثال عملي: إضافة Playwright MCP عبر mcpservers.org</summary>
+          <p>
+            إذا كنت تريد أن تجعل الوكيل يتعامل مع المتصفح بشكل فعلي، فواحد من أفضل الأمثلة هو <strong>Playwright MCP</strong>. الفكرة ببساطة: تبحث عنه داخل mcpservers.org، ثم تضيفه إلى إعداد OpenCode، وبعدها يستطيع الوكيل فتح الصفحات، والتنقل، والنقر، وملء النماذج، واستخراج البيانات من المواقع بشكل منظم.
+          </p>
+          <p>
+            هذا المثال مناسب في حالات مثل: اختبار صفحة ويب، تسجيل الدخول إلى بيئة تجريبية، جمع معلومات من لوحة تحكم، أو تنفيذ خطوات متكررة داخل المتصفح بدل تنفيذها يدويًا.
+          </p>
+          <div class="code-wrap">
+            <button class="copy-btn" data-copy="#codePlaywrightMcp">نسخ</button>
+            <pre id="codePlaywrightMcp">{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp@latest"]
+    }
+  }
+}</pre>
+          </div>
+          <p>
+            بعد الإضافة يمكنك توجيه الوكيل بأوامر مباشرة مثل:
+          </p>
+          <div class="code-wrap">
+            <button class="copy-btn" data-copy="#codePlaywrightPrompt">نسخ</button>
+            <pre id="codePlaywrightPrompt">استخدم أداة playwright وافتح الموقع المطلوب، ثم انتقل إلى الصفحة الرئيسية،
+واستخرج العناوين الرئيسية، وإذا وجدت زر تسجيل دخول فاذكر مساره وخطوات الوصول إليه.
+
+أو:
+
+استخدم playwright لفتح لوحة التحكم التجريبية، ثم التقط تسلسل الخطوات اللازمة
+لإنشاء مستخدم جديد، واكتبها لي خطوة بخطوة.</pre>
+          </div>
+          <p>
+            في التطبيق العملي، يفضّل أن تكون تعليماتك محددة: ما الصفحة التي تريد فتحها، وما البيانات التي تريد استخراجها، وهل المطلوب فقط الفحص أم التفاعل الكامل مع العناصر داخل الصفحة.
+          </p>
+        </details>
+      </section>
+
+      <section id="mcpservers" class="section">
+        <span class="kicker">المحور الثامن</span>
+        <h2>ما هو <a href="https://mcpservers.org/" target="_blank" rel="noopener">mcpservers.org</a>؟</h2>
+        <p>
+          الموقع يعرّف نفسه بأنه <strong>مجموعة/دليل لخوادم Model Context Protocol</strong>. عمليًا: هو مكان لاكتشاف خوادم MCP الرسمية والمجتمعية حسب الفئة والاستخدام، مثل التصفح الآلي، وسحب الويب، وGitHub، وقواعد البيانات، وRAG، وPDF، وغير ذلك.
+        </p>
+        <div class="cards">
+          <div class="card">
+            <h4>ما فائدته لك؟</h4>
+            <p>بدل أن تبحث عشوائيًا عن خادم MCP مناسب، تبدأ من دليل منظم يجمع الخيارات المتاحة.</p>
+          </div>
+          <div class="card">
+            <h4>متى تستخدمه؟</h4>
+            <p>عندما تريد إضافة قدرة جديدة لوكيلك، مثل GitHub أو متصفح أو مستندات أو بحث ويب.</p>
+          </div>
+          <div class="card">
+            <h4>كيف تفكر فيه؟</h4>
+            <p>يشبه “متجر اكتشاف” أو “فهرس أدوات” لوكلاء الذكاء الاصطناعي المتوافقين مع MCP.</p>
+          </div>
+        </div>
+        <details>
+          <summary>أمثلة على فئات موجودة في الموقع</summary>
+          <p>
+            من الفئات الظاهرة على الصفحة الرئيسية: Browser Automation، Web Scraping، RAG، OpenAPI، PDF، Coding Agent MCP. وهذا يساعدك على اختيار الخادم المناسب حسب السيناريو العملي الذي تريد دعمه في وكيلك.
+          </p>
+        </details>
+      </section>
+
+      <section id="skills" class="section">
+        <span class="kicker">المحور التاسع</span>
+        <h2>كيف تثبّت المهارات Skills للوكيل في OpenCode؟</h2>
+        <p>
+          تسمح <strong>Agent Skills</strong> للوكيل باكتشاف تعليمات قابلة لإعادة الاستخدام من المشروع أو من مجلد المستخدم، ويتم تحميلها عند الحاجة بواسطة أداة <code>skill</code>. وهذا يعني أنك تستطيع تجهيز “مهارات جاهزة” مثل: مراجعة Pull Request، أو تجهيز release notes، أو أسلوب موحد للتوثيق.
+        </p>
+
+        <div class="tab-buttons" data-tab-group="skills-tabs">
+          <button class="active" data-tab="skills-where">أين توضع الملفات؟</button>
+          <button data-tab="skills-format">صيغة SKILL.md</button>
+          <button data-tab="skills-permissions">التحكم في الصلاحيات</button>
+        </div>
+
+        <div class="tab-panel active" id="skills-where">
+          <p>يبحث OpenCode عن المهارات في عدة مسارات، وأهمها:</p>
+          <ul>
+            <li><code>.opencode/skills/&lt;name&gt;/SKILL.md</code> داخل المشروع</li>
+            <li><code>~/.config/opencode/skills/&lt;name&gt;/SKILL.md</code> على مستوى المستخدم</li>
+            <li>كما يدعم مسارات متوافقة مع <code>.claude/skills</code> و <code>.agents/skills</code>.</li>
+          </ul>
+        </div>
+
+        <div class="tab-panel" id="skills-format">
+          <p>كل مهارة يجب أن تبدأ بـ YAML frontmatter يتضمن على الأقل <code>name</code> و<code>description</code>. كما يجب أن يطابق الاسم اسم المجلد وأن يكون بصيغة lowercase مع شرطات.</p>
+          <div class="code-wrap">
+            <button class="copy-btn" data-copy="#codeSkill">نسخ</button>
+            <pre id="codeSkill">---
+name: git-release
+description: Create consistent releases and changelogs
+license: MIT
+compatibility: opencode
+metadata:
+  audience: maintainers
+  workflow: github
+---
+
+## What I do
+- Draft release notes from merged PRs
+- Propose a version bump
+- Provide a copy-pasteable gh release create command
+
+## When to use me
+Use this when you are preparing a tagged release.
+Ask clarifying questions if the target versioning scheme is unclear.</pre>
+          </div>
+          <p class="muted">هذا المثال يوضح شكل المهارة الأساسية وطريقة كتابتها.</p>
+        </div>
+
+        <div class="tab-panel" id="skills-permissions">
+          <p>
+            يمكنك التحكم في المهارات المسموح بها أو المرفوضة أو التي تحتاج موافقة باستخدام إعدادات <code>permission.skill</code> داخل <code>opencode.json</code>. وتدعم الأنماط wildcard مثل <code>internal-*</code>.
+          </p>
+          <div class="code-wrap">
+            <button class="copy-btn" data-copy="#codeSkillPerm">نسخ</button>
+            <pre id="codeSkillPerm">{
+  "permission": {
+    "skill": {
+      "*": "allow",
+      "pr-review": "allow",
+      "internal-*": "deny",
+      "experimental-*": "ask"
+    }
+  }
+}</pre>
+          </div>
+        </div>
+
+        <details>
+          <summary>كيف يحمّل الوكيل المهارة؟</summary>
+          <p>
+            يعرض OpenCode المهارات المتاحة داخل وصف أداة <code>skill</code>، ثم يستطيع الوكيل تحميل المهارة باستدعاء مثل <code>skill({ name: "git-release" })</code>.
+          </p>
+        </details>
+
+        <details>
+          <summary>مثال عملي: مهارة للتعامل مع Excel Sheets</summary>
+          <p>
+            لو أردت أن تجعل الوكيل ينشئ ملفات Excel بشكل متكرر بأسلوب موحد، فالحل الأفضل هو تجهيز مهارة مخصصة. هذه المهارة يمكن أن تعطيه قواعد ثابتة مثل: إنشاء ملف <code>.xlsx</code>، تنسيق صف العناوين، تفعيل الفلاتر، ضبط عرض الأعمدة، وتجميد الصف الأول.
+          </p>
+          <p>
+            أنشئ مجلدًا باسم <code>excel-sheet-builder</code> ثم ضع داخله ملف <code>SKILL.md</code> بهذا المحتوى:
+          </p>
+          <div class="code-wrap">
+            <button class="copy-btn" data-copy="#codeExcelSkill">نسخ</button>
+            <pre id="codeExcelSkill">---
+name: excel-sheet-builder
+description: Create clean Excel spreadsheets with headers, formatting, filters, and summary sheets
+license: MIT
+compatibility: opencode
+metadata:
+  audience: analysts
+  workflow: excel
+---
+
+## What I do
+- Create .xlsx files from user requirements
+- Add header formatting and freeze the first row
+- Auto-size columns and enable filters
+- Create more than one sheet when needed
+- Add a summary sheet if the task requires totals or KPIs
+
+## When to use me
+Use this skill when the user asks for an Excel workbook, sales tracker, attendance sheet,
+inventory file, budget workbook, or any structured spreadsheet.
+
+## How I should behave
+1. Ask for missing columns only if they are not clear.
+2. Build the workbook in a clean business-ready format.
+3. Use meaningful sheet names.
+4. Save the final file with the requested filename.
+5. Summarize what sheets and columns were created.</pre>
+          </div>
+          <p>
+            بعد ذلك تستطيع أن تأمر الوكيل بشكل مباشر، مثل:
+          </p>
+          <div class="code-wrap">
+            <button class="copy-btn" data-copy="#codeExcelPrompt">نسخ</button>
+            <pre id="codeExcelPrompt">استخدم مهارة excel-sheet-builder وأنشئ ملف Excel باسم sales-report.xlsx
+يحتوي على شيت للمبيعات اليومية بالأعمدة التالية:
+التاريخ، اسم المنتج، الكمية، سعر الوحدة، إجمالي البيع.
+
+أضف شيت ثاني باسم summary يلخص إجمالي المبيعات وعدد العمليات،
+واجعل صف العناوين مميزًا مع تفعيل الفلاتر وتجميد الصف الأول.</pre>
+          </div>
+          <p>
+            بهذه الطريقة لا تكرر التعليمات نفسها كل مرة. بدل ذلك، تصبح طريقة بناء ملفات Excel جزءًا من سلوك الوكيل نفسه، ويمكنك إعادة استخدام المهارة في أي مشروع أو مجلد مناسب.
+          </p>
+        </details>
+
+        <details>
+          <summary>أخطاء شائعة في تثبيت المهارات</summary>
+          <ul>
+            <li>اسم الملف ليس <code>SKILL.md</code> بحروف كبيرة</li>
+            <li>عدم وجود <code>name</code> أو <code>description</code> في frontmatter</li>
+            <li>اسم المهارة لا يطابق اسم المجلد</li>
+            <li>المهارة محجوبة بسبب الصلاحيات</li>
+          </ul>
+          <p class="muted">إذا لم تظهر المهارة داخل الوكيل، راجع هذه النقاط أولًا قبل البحث عن سبب آخر.</p>
+        </details>
+      </section>
+
+      </div>
+
+      <div class="unit-block">
+        <div class="unit-header">
+          <span class="unit-label">الوحدة الثالثة</span>
+          <h2>المراجعة النهائية والمصادر</h2>
+          <p>في هذه الوحدة تختبر فهمك السريع للمحتوى، ثم تعود إلى المصادر الرسمية الأساسية إذا أردت التعمّق أو البناء على هذا الدليل.</p>
+        </div>
+      <section id="quiz" class="section">
+        <span class="kicker">اختبار نهاية الكورس</span>
+        <h2>الاختبار النهائي</h2>
+        <p class="muted">يجب على المتدرب كتابة اسمه أولًا ثم تقديم الاختبار. لكل مستخدم محاولة واحدة فقط على هذا المتصفح.</p>
+
+        <div class="exam-box">
+          <div class="exam-intro">
+            <strong>تعليمات الاختبار:</strong>
+            <ul>
+              <li>أدخل الاسم الكامل قبل البدء.</li>
+              <li>أجب عن جميع الأسئلة ثم اضغط إرسال الاختبار.</li>
+              <li>بعد الإرسال سيتم قفل المحاولة ولن يمكن إعادة التقديم من نفس المتصفح.</li>
+            </ul>
+          </div>
+
+          <form id="finalExamForm" class="candidate-form">
+            <label for="candidateName">اسم المتدرب</label>
+            <input id="candidateName" name="candidateName" type="text" placeholder="اكتب الاسم الكامل هنا" required />
+
+            <div class="exam-grid">
+              <div class="exam-question" data-answer="2">
+                <h4>1) ما الوصف الأدق لـ OpenCode؟</h4>
+                <label class="option"><input type="radio" name="q1" value="1"> نموذج لغوي فقط</label>
+                <label class="option"><input type="radio" name="q1" value="2"> وكيل برمجي مفتوح المصدر</label>
+                <label class="option"><input type="radio" name="q1" value="3"> قاعدة بيانات للمطورين</label>
+              </div>
+
+              <div class="exam-question" data-answer="3">
+                <h4>2) ما الدور الأساسي لـ MCP؟</h4>
+                <label class="option"><input type="radio" name="q2" value="1"> ضغط ملفات المشروع</label>
+                <label class="option"><input type="radio" name="q2" value="2"> استبدال النموذج اللغوي</label>
+                <label class="option"><input type="radio" name="q2" value="3"> توحيد ربط تطبيقات الذكاء الاصطناعي بالأنظمة الخارجية</label>
+              </div>
+
+              <div class="exam-question" data-answer="1">
+                <h4>3) أي ملف يجب إنشاؤه للمهارة داخل OpenCode؟</h4>
+                <label class="option"><input type="radio" name="q3" value="1"> SKILL.md</label>
+                <label class="option"><input type="radio" name="q3" value="2"> agent.txt</label>
+                <label class="option"><input type="radio" name="q3" value="3"> skill.json</label>
+              </div>
+
+              <div class="exam-question" data-answer="2">
+                <h4>4) ما الذي يميز الوكيل عن النموذج فقط؟</h4>
+                <label class="option"><input type="radio" name="q4" value="1"> يكتب بلغة أجمل فقط</label>
+                <label class="option"><input type="radio" name="q4" value="2"> يمكنه التخطيط واستخدام الأدوات وتنفيذ مهام متعددة الخطوات</label>
+                <label class="option"><input type="radio" name="q4" value="3"> لا يحتاج إلى نموذج لغوي</label>
+              </div>
+
+              <div class="exam-question" data-answer="3">
+                <h4>5) أين يتم تعريف خوادم MCP في OpenCode؟</h4>
+                <label class="option"><input type="radio" name="q5" value="1"> داخل ملف README.md</label>
+                <label class="option"><input type="radio" name="q5" value="2"> داخل ملف SKILL.md</label>
+                <label class="option"><input type="radio" name="q5" value="3"> داخل إعداد OpenCode تحت المفتاح mcp</label>
+              </div>
+
+              <div class="exam-question" data-answer="2">
+                <h4>6) ما فائدة mcpservers.org؟</h4>
+                <label class="option"><input type="radio" name="q6" value="1"> موقع لحفظ كلمات المرور</label>
+                <label class="option"><input type="radio" name="q6" value="2"> دليل لاكتشاف خوادم MCP الرسمية والمجتمعية</label>
+                <label class="option"><input type="radio" name="q6" value="3"> أداة بديلة لـ OpenCode</label>
+              </div>
+
+              <div class="exam-question" data-answer="1">
+                <h4>7) ما الأمر الذي يحلل المشروع ويُنشئ AGENTS.md؟</h4>
+                <label class="option"><input type="radio" name="q7" value="1"> /init</label>
+                <label class="option"><input type="radio" name="q7" value="2"> /deploy</label>
+                <label class="option"><input type="radio" name="q7" value="3"> /reset</label>
+              </div>
+
+              <div class="exam-question" data-answer="3">
+                <h4>8) ما الشكل الصحيح لتعريف مهارة قابلة لإعادة الاستخدام؟</h4>
+                <label class="option"><input type="radio" name="q8" value="1"> ملف عادي بدون frontmatter</label>
+                <label class="option"><input type="radio" name="q8" value="2"> صورة PNG داخل مجلد skills</label>
+                <label class="option"><input type="radio" name="q8" value="3"> ملف SKILL.md يبدأ بـ YAML frontmatter يحتوي name وdescription</label>
+              </div>
+            </div>
+
+            <div class="exam-actions">
+              <button type="submit" id="submitExamBtn" class="primary-btn">إرسال الاختبار النهائي</button>
+              <span class="mini-note">سيتم حفظ النتيجة محليًا لعرضها في صفحة النتائج المخفية.</span>
+            </div>
+          </form>
+
+          <div id="examStatus" class="status-box"></div>
+        </div>
+      </section>
+
+      <section id="sources" class="section">
+        <span class="kicker">المراجع الأساسية</span>
+        <h2>المصادر الرسمية المستخدمة</h2>
+        <div class="source-list">
+          <div class="source-item">
+            <strong>OpenCode Intro</strong>
+            <a href="https://opencode.ai/docs/" target="_blank" rel="noopener">https://opencode.ai/docs/</a>
+          </div>
+          <div class="source-item">
+            <strong>OpenCode Download</strong>
+            <a href="https://opencode.ai/download" target="_blank" rel="noopener">https://opencode.ai/download</a>
+          </div>
+          <div class="source-item">
+            <strong>OpenCode MCP Servers</strong>
+            <a href="https://opencode.ai/docs/mcp-servers/" target="_blank" rel="noopener">https://opencode.ai/docs/mcp-servers/</a>
+          </div>
+          <div class="source-item">
+            <strong>OpenCode Skills</strong>
+            <a href="https://opencode.ai/docs/skills/" target="_blank" rel="noopener">https://opencode.ai/docs/skills/</a>
+          </div>
+          <div class="source-item">
+            <strong>OpenCode GitHub Repository</strong>
+            <a href="https://github.com/anomalyco/opencode" target="_blank" rel="noopener">https://github.com/anomalyco/opencode</a>
+          </div>
+          <div class="source-item">
+            <strong>IBM — Large Language Models</strong>
+            <a href="https://www.ibm.com/think/topics/large-language-models" target="_blank" rel="noopener">https://www.ibm.com/think/topics/large-language-models</a>
+          </div>
+          <div class="source-item">
+            <strong>Model Context Protocol — Intro</strong>
+            <a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="noopener">https://modelcontextprotocol.io/docs/getting-started/intro</a>
+          </div>
+          <div class="source-item">
+            <strong>Model Context Protocol — Server Concepts</strong>
+            <a href="https://modelcontextprotocol.io/docs/learn/server-concepts" target="_blank" rel="noopener">https://modelcontextprotocol.io/docs/learn/server-concepts</a>
+          </div>
+          <div class="source-item">
+            <strong>mcpservers.org Directory</strong>
+            <a href="https://mcpservers.org/" target="_blank" rel="noopener">https://mcpservers.org/</a>
+          </div>
+          <div class="source-item">
+            <strong>Playwright MCP on mcpservers.org</strong>
+            <a href="https://mcpservers.org/servers/playwright-mcp-server" target="_blank" rel="noopener">https://mcpservers.org/servers/playwright-mcp-server</a>
+          </div>
+          <div class="source-item">
+            <strong>Google Cloud — What is AI?</strong>
+            <a href="https://cloud.google.com/learn/what-is-artificial-intelligence" target="_blank" rel="noopener">https://cloud.google.com/learn/what-is-artificial-intelligence</a>
+          </div>
+          <div class="source-item">
+            <strong>OpenAI — Agents Guide</strong>
+            <a href="https://developers.openai.com/api/docs/guides/agents" target="_blank" rel="noopener">https://developers.openai.com/api/docs/guides/agents</a>
+          </div>
+          <div class="source-item">
+            <strong>Google Cloud — What are AI Agents?</strong>
+            <a href="https://cloud.google.com/discover/what-are-ai-agents" target="_blank" rel="noopener">https://cloud.google.com/discover/what-are-ai-agents</a>
+          </div>
+        </div>
+      </section>
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    تم إعداد هذا الموقع التعليمي بصياغة عربية مبسطة ومناسب كنقطة انطلاق للتدريب الداخلي أو الورش أو التعلم الذاتي.
+  </footer>
+
+  <section id="hiddenResultsPage" class="hidden-results-page">
+    <div class="results-shell">
+      <div class="results-head">
+        <span class="kicker">صفحة مخفية</span>
+        <h1>لوحة نتائج اختبار الكورس</h1>
+        <p class="mini-note">هذه الصفحة تعرض النتائج المحفوظة محليًا على نفس الجهاز والمتصفح. للوصول إليها استخدم الرابط المخفي المخصص.</p>
+      </div>
+      <div class="results-card">
+        <h3>نتائج المتدربين</h3>
+        <div class="results-table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>اسم المتدرب</th>
+                <th>الدرجة</th>
+                <th>النسبة</th>
+                <th>الحالة</th>
+                <th>تاريخ ووقت الإرسال</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTableBody">
+              <tr><td colspan="6">لا توجد نتائج محفوظة حتى الآن.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const bar = document.getElementById('scrollBar');
+    const navLinks = [...document.querySelectorAll('#navLinks a')];
+    const sections = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+
+    function updateScrollBar() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      bar.style.width = pct + '%';
+    }
+
+    function updateActiveLink() {
+      let currentId = '';
+      sections.forEach(sec => {
+        const top = sec.getBoundingClientRect().top;
+        if (top <= 160) currentId = sec.id;
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + currentId);
+      });
+    }
+
+    window.addEventListener('scroll', () => {
+      updateScrollBar();
+      updateActiveLink();
+    });
+    updateScrollBar();
+    updateActiveLink();
+
+    document.querySelectorAll('[data-tab-group]').forEach(group => {
+      const buttons = group.querySelectorAll('button');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tabId = btn.dataset.tab;
+          const section = group.parentElement;
+          buttons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          section.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+          const target = section.querySelector('#' + tabId);
+          if (target) target.classList.add('active');
+        });
+      });
+    });
+
+    document.querySelectorAll('.copy-btn[data-copy]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const target = document.querySelector(btn.dataset.copy);
+        if (!target) return;
+        try {
+          await navigator.clipboard.writeText(target.innerText.trim());
+          const old = btn.textContent;
+          btn.textContent = 'تم النسخ';
+          setTimeout(() => btn.textContent = old, 1200);
+        } catch (e) {
+          btn.textContent = 'انسخ يدويًا';
+          setTimeout(() => btn.textContent = 'نسخ', 1200);
+        }
+      });
+    });
+
+    const EXAM_ATTEMPT_KEY = 'opencode_final_exam_attempt_v1';
+    const EXAM_RESULTS_KEY = 'opencode_final_exam_results_v1';
+    const RESULTS_VIEW_KEY = 'opencode-results';
+    const finalExamForm = document.getElementById('finalExamForm');
+    const examStatus = document.getElementById('examStatus');
+    const submitExamBtn = document.getElementById('submitExamBtn');
+    const hiddenResultsPage = document.getElementById('hiddenResultsPage');
+    const resultsTableBody = document.getElementById('resultsTableBody');
+
+    function safeReadJSON(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function setStatus(message, type) {
+      examStatus.className = 'status-box show ' + type;
+      examStatus.innerHTML = message;
+    }
+
+    function lockExamForm(attempt) {
+      if (!finalExamForm) return;
+      [...finalExamForm.querySelectorAll('input, button')].forEach(el => {
+        el.disabled = true;
+      });
+      if (attempt) {
+        setStatus(
+          '<strong>تم استخدام المحاولة بالفعل.</strong><br>اسم المتدرب: ' + attempt.name + '<br><span class="score-badge">النتيجة: ' + attempt.score + '/' + attempt.total + ' (' + attempt.percent + '%)</span>',
+          attempt.passed ? 'success' : 'warn'
+        );
+      }
+    }
+
+    function renderResultsPage() {
+      const allResults = safeReadJSON(EXAM_RESULTS_KEY, []);
+      if (!resultsTableBody) return;
+      if (!allResults.length) {
+        resultsTableBody.innerHTML = '<tr><td colspan="6">لا توجد نتائج محفوظة حتى الآن.</td></tr>';
+        return;
+      }
+      resultsTableBody.innerHTML = allResults.map((row, index) => {
+        return '<tr>' +
+          '<td>' + (index + 1) + '</td>' +
+          '<td>' + row.name + '</td>' +
+          '<td>' + row.score + '/' + row.total + '</td>' +
+          '<td>' + row.percent + '%</td>' +
+          '<td>' + (row.passed ? 'ناجح' : 'يحتاج مراجعة') + '</td>' +
+          '<td>' + row.submittedAt + '</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    function initHiddenResultsPage() {
+      const params = new URLSearchParams(window.location.search);
+      const isResultsView = params.get('view') === RESULTS_VIEW_KEY;
+      if (!isResultsView) return;
+      document.querySelector('.hero-wrap').style.display = 'none';
+      document.querySelector('.shell').style.display = 'none';
+      document.querySelector('footer').style.display = 'none';
+      hiddenResultsPage.classList.add('active');
+      renderResultsPage();
+    }
+
+    const existingAttempt = safeReadJSON(EXAM_ATTEMPT_KEY, null);
+    if (existingAttempt) {
+      lockExamForm(existingAttempt);
+    }
+
+    if (finalExamForm) {
+      finalExamForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        if (safeReadJSON(EXAM_ATTEMPT_KEY, null)) {
+          lockExamForm(safeReadJSON(EXAM_ATTEMPT_KEY, null));
+          return;
+        }
+
+        const candidateName = document.getElementById('candidateName').value.trim();
+        if (!candidateName) {
+          setStatus('من فضلك اكتب اسم المتدرب قبل إرسال الاختبار.', 'error');
+          return;
+        }
+
+        const questions = [...finalExamForm.querySelectorAll('.exam-question')];
+        let score = 0;
+        const total = questions.length;
+
+        for (let i = 0; i < questions.length; i++) {
+          const q = questions[i];
+          const checked = q.querySelector('input[type="radio"]:checked');
+          if (!checked) {
+            setStatus('يجب الإجابة عن جميع الأسئلة قبل الإرسال.', 'error');
+            return;
+          }
+          if (checked.value === q.dataset.answer) score += 1;
+        }
+
+        const percent = Math.round((score / total) * 100);
+        const passed = percent >= 70;
+        const submittedAt = new Date().toLocaleString('ar-EG');
+        const attempt = { name: candidateName, score, total, percent, passed, submittedAt };
+
+        localStorage.setItem(EXAM_ATTEMPT_KEY, JSON.stringify(attempt));
+        const allResults = safeReadJSON(EXAM_RESULTS_KEY, []);
+        allResults.push(attempt);
+        localStorage.setItem(EXAM_RESULTS_KEY, JSON.stringify(allResults));
+
+        lockExamForm(attempt);
+        setStatus(
+          '<strong>تم إرسال الاختبار بنجاح.</strong><br>شكرًا يا ' + candidateName + '.<br><span class="score-badge">درجتك: ' + score + '/' + total + ' (' + percent + '%)</span><br>' +
+          (passed ? 'الحالة: ناجح ✅' : 'الحالة: يحتاج مراجعة المحتوى ثم مناقشة المدرب ⚠️'),
+          passed ? 'success' : 'warn'
+        );
+      });
+    }
+
+    initHiddenResultsPage();
+  </script>
+</body>
+</html>
